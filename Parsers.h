@@ -8,8 +8,16 @@
 #include "CommandLogic.h"
 using namespace std;
 class LineParser{
+    public:
     RawPipeNode parse(string s);
+private:
+    char delimiter = '/"';
 
+};
+
+class CommandParser{
+    public:
+    Command* parse(RawPipeNode node);
 };
 
 #endif

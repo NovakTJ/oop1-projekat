@@ -5,25 +5,45 @@
 #include<istream>
 #include<ostream>
 #include<list>
+#include "Simulator.h"
 using namespace std;
 
-class Command{
+class PipeNode{
     public:
-    virtual void execute() = 0;
-    virtual void addOption() = 0;
-};
+    void setInputStream(istream* is);
+    void setOutputStream(ostream* os);
+    protected:
+    PipeNode(istream* inputStream = Simulator::getInputStream(), ostream* outputStream = Simulator::getOutputStream()): 
+    inputStream(inputStream),
+    outputStream(outputStream)
+    {};
 
-class RawPipeNode{
-    public:
     istream* inputStream;
     ostream* outputStream;
-    string commandDescription;
-    RawPipeNode(string commandDescription, istream* inputStream, ostream* outputStream) : 
-    inputStream(inputStream),
-    outputStream(outputStream),
-    commandDescription(commandDescription)
-    {}
+
 };
+
+class RawPipeNode : public PipeNode{
+public:
+
+    //RawPipeNode(string commandDescription) : RawPipeNode(commandDescription, Simulator::Instance()->getInputStream(), Simulator::Instance()->getOutputStream()) {}
+    RawPipeNode(string commandDescription) : commandDescription(commandDescription) {}
+    RawPipeNode(string commandDescription, string inputString) : commandDescription(commandDescription), PipeNode(new stringstream(inputString)) {}
+    string getCommandDescription();
+private:
+    string commandDescription;
+
+};
+
+class Command : public PipeNode{
+    public:
+    void execute();
+    virtual void addOption(string option) = 0;
+    protected:
+    virtual void executeLogic() = 0;
+
+};
+
 
 class PipeChain{
     public:

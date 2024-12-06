@@ -17,7 +17,14 @@ private:
 };
 
 class Simulator{
+
 public:
+    static Simulator* Instance();
+    static ostream* getOutputStream();
+    static istream* getInputStream();
+
+
+protected:
     Simulator() :
     prompter(Prompter(string(" $ "), outputStream)),
     outputStream(&cout),
